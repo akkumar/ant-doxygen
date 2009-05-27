@@ -1,0 +1,110 @@
+<html>
+<meta name="author" content="Karthik Kumar" >
+<meta name="description" content="Ant task for doxygen" >
+<meta name="keywords" content="ant, open source, Karthik Kumar, doxygen, Sourceforge, Apache licence, free software, doxygen 1.2.18, 1.2, Ant task" >
+
+<title>Ant Task for  Doxygen - 1.6.1</title>
+<body>
+<center><p align="center"><b><font
+ face="Verdana, Arial, Helvetica, sans-serif">Visit Ant - Doxygen task home <a
+ href="http://ant-doxygen.blogspot.com"  target="_top">here</a>.</font></b></p>
+                  <p align="center"><b><font
+ face="Verdana, Arial, Helvetica, sans-serif">Version 1.6.1</font></b></p></center>
+                  <p align="center">&nbsp;</p>
+                </blockquote>
+              </blockquote>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+<p><font face="Arial, Helvetica, sans-serif"><b><font size="5"
+ face="Times New Roman, Times, serif">Doxygen</font></b></font></p>
+<p><font size="4" face="Times New Roman, Times, serif"><b>Description</b></font>
+</p>
+<p><font face="Times New Roman, Times, serif" size="3">This task is a wrapper
+  for the configuration options for doxygen, a document generation-tool. To know
+  more about doxygen in the words of the author himself -</font></p>
+<p><font face="Times New Roman, Times, serif" size="3">" Doxygen is a documentation
+  system for C++, C, Java, IDL (Corba, Microsoft, and KDE-DCOP flavors) and to
+  some extend PHP.</font></p>
+<ol>
+  <li><font face="Times New Roman, Times, serif" size="3"> It can generate an
+    on-line documentation browser (in HTML) and/or an off-line reference manual
+    from a set of documented source files. There is also support for generating
+    output in RTF (MS-Word), PostScript, hyperlinked PDF, compressed HTML, and
+    Unix man pages. The documentation is extracted directly from the sources,
+    which makes it much easier to keep the documentation consistent with the source
+    code. </font></li>
+  <li><font face="Times New Roman, Times, serif" size="3">Doxygen can be configured
+    to extract the code structure from undocumented source files. This can be
+    very useful to quickly find your way in large source distributions. The relations
+    between the various elements are be visualized by means of include dependency
+    graphs, inheritance diagrams, and collaboration diagrams, which are all generated
+    automatically.</font>"</li>
+</ol>
+<p></p>
+<p>Visit doxygen software home <a href="http://www.doxygen.org">here</a>. </p>
+<p><font size="4" face="Times New Roman, Times, serif"><b>Parameters</b></font></p>
+<p><font size="3">doxygen task does not take any attribute. But it takes 'property' child nodes as attribute.  The structure of 'property' node is as follows:</font> <br>
+<font face=Courier size=2>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="<i>&lt;doxygen_property_name&gt;</i>" value="<i>&lt;property_value&gt;</i>" /&gt;</font><br>
+<br>
+The field 'doxygen_property_name' corresponds to the property defined as per the doxygen configuration file. Please see the following examples to get a better idea of the same. 
+</font></p>
+<p><br>
+  <font face="Times New Roman, Times, serif"><b><font size="4">Examples:</font></b></font></p>
+<p><b>1. <font face="Times New Roman, Times, serif">To generate documentation
+  by default in current directory, basic option.</font></b></p>
+  <ul><li><b>Ant 1.7+:</b>
+<p><font face="Courier New, Courier, mono" size="2">
+&lt;project name="my-project" xmlns:doxygen="antlib:org.doxygen.tools" .... /&gt; <br> 
+  &lt;doxygen:doxygen&gt; <br>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="INPUT" value="${inputdir}" /&gt; <br>
+  &lt;/doxygen:doxygen&gt; <br>   
+   </font></p>
+  </li> <b>or</b>
+  <li><p><font face="Courier New, Courier, mono" size="2">
+&lt;taskdef name="doxygen" classname="org.doxygen.tools.DoxygenTask"<br>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; classpath="${destdir}" /&gt;<br>
+  &lt;doxygen&gt; <br>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="INPUT" value="${inputdir}" /&gt; <br>
+  &lt;/doxygen&gt; <br>   
+  
+  </font></p>
+   </li></ul>
+  
+<p><font face="Times New Roman, Times, serif"><b>2. To generate html documentation
+  recursively for a given dir. and suppress latex documentation</b></font></p>
+  <ul>
+  <li><b>Ant 1.7+:</b><font
+ face="Courier New, Courier, mono" size="2">
+ &lt;project name="my-project" xmlns:doxygen="antlib:org.doxygen.tools" .... /&gt; <br> 
+  &lt;doxygen:doxygen&gt;<br>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="INPUT" value="${inputdir}" /&gt; <br>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="RECURSIVE" value="yes" /&gt; <br>  
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="GENERATE_LATEX" value="false" /&gt; <br>  
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="PROJECT_NAME" value="Ant-Doxygen Test Docs" /&gt; <br>  
+    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="GENERATE_TREEVIEW" value="yes" /&gt; <br>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="SOURCE_BROWSER" value="yes" /&gt; <br>    
+  &lt;/doxygen:doxygen&gt;<br>   
+  </font>
+   </li> <b>or</b>
+   <li>
+    <font
+ face="Courier New, Courier, mono" size="2">
+ &lt;taskdef name="doxygen" classname="org.doxygen.tools.DoxygenTask"<br> 
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; classpath="${destdir}" /&gt;<br> <br>
+  &lt;doxygen&gt;<br>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="INPUT" value="${inputdir}" /&gt; <br>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="RECURSIVE" value="yes" /&gt; <br>  
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="GENERATE_LATEX" value="false" /&gt; <br>  
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="PROJECT_NAME" value="Ant-Doxygen Test Docs" /&gt; <br>  
+    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="GENERATE_TREEVIEW" value="yes" /&gt; <br>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&lt;property name="SOURCE_BROWSER" value="yes" /&gt; <br>    
+  &lt;/doxygen&gt;<br>   
+  </font>
+    </li>
+  </ul>
+</body></html>

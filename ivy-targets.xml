@@ -1,0 +1,35 @@
+<project basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+	<property file="build.properties" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+	<property name="ivy.jar.zip" value="${ivy.jar.dir}/ivy.zip" />
+
+	<target name="init-ivy">
+		<available property="ivy.installed" value="true" file="${ivy.jar.file}" type="file" />
+	</target>
+
+	<target name="clean-ivy">
+		<delete dir="${ivy.jar.dir}" />
+		<delete dir="${lib.dir}" />
+	</target>
+
+	<target name="download-ivy" depends="init-ivy" unless="ivy.installed">
+		<mkdir dir="${ivy.jar.dir}" />
+		<echo message="Installing Ivy..." />
+		<get src="${osu.repo}/${ivy.install.version}/apache-ivy-${ivy.install.version}-bin.zip" dest="${ivy.jar.zip}" />
+		<unzip src="${ivy.jar.zip}" dest="${ivy.jar.dir}" />
+		<copy file="${ivy.jar.dir}/apache-ivy-${ivy.install.version}/ivy-${ivy.install.version}.jar" todir="${ivy.jar.dir}" />
+	</target>
+
+	<target name="load-ivy" depends="init-ivy,download-ivy">
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+		<ivy:settings file="${basedir}/ivy.settings.xml" />
+	</target>
+	<target name="inflate-core" depends="load-ivy">
+		<ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" type="jar" />
+	</target>
+
+
+</project>

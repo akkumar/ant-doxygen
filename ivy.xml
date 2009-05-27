@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="1.0">
+	<info organisation="org.example" module="myproject" />
+	<configurations>
+		<conf name="compile" transitive="false" />
+	</configurations>
+	<dependencies defaultconf="compile">
+		<dependency org="org.apache.ant" name="com.springsource.org.apache.tools.ant"
+			rev="1.7.0" />
+		<dependency org="org.junit" name="com.springsource.org.junit"
+			rev="4.5.0" />
+	</dependencies>
+</ivy-module>

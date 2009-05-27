@@ -1,0 +1,230 @@
+<!--============================================================================-->
+<!-- BUILD.XML:									-->
+<!--	Ant build file used for ant_doxygen builds and releases.		-->
+<!--	 									-->
+<!-- TARGETS:									-->
+<!--		ant			- Compile and package everything.	-->
+<!--		ant deliverables	- Compile and package everything.	-->
+<!--		ant test		- Perform unit tests.			-->
+<!--		ant documentation	- Generate JavaDoc and Doxygen Doc sets.-->
+<!--		ant compile		- Compile everything.			-->
+<!--	 									-->
+<!--		ant checkstyle		- Verify Sun coding style adherence.	-->
+<!--	 									-->
+<!-- URL:									-->
+<!--	http://ant-doxygen.sourceforge.net		- Project Home		-->
+<!--	http://sourceforge.net/projects/ant-doxygen	- SourceForge Project	-->
+<!--	 									-->
+<!--============================================================================-->
+
+<project name="Ant-Doxygen" default="deliverables" basedir=".">
+
+
+
+
+
+	<!--===========================================================================-->
+	<!-- PROPERTY INITIALIZATION:							-->
+	<!--	 The following properties are used in this file.			-->
+	<!--	 	version		- Version of this project			-->
+	<!--	 	build.compiler	- We prefer "jikes".  You might use "javac" 	-->
+	<!--	 	${dist_ant}.jar	- Name of the Ant task jar file.	 	-->
+	<!--	 	${dist_bin}.tgz	- Name of the binary distribution file.	 	-->
+	<!--	 	${dist_src}.tgz	- Name of the source distribution file.	 	-->
+	<!--	 	${dist_info}	- Names of info files in each distribution. 	-->
+	<!--	 									-->
+	<!-- NOTE: 									-->
+	<!--	You may wish to use your ${user.home}/ant.properties file to preset	-->
+	<!--	build.compiler and possibly the checkstyle and/or junit jar files	-->
+	<!--	 									-->
+	<target name="properties">
+		<property file="build.properties" />
+
+
+		<!-- Used in target: deliverables -->
+		<property name="dist_ant" value="lib/ant_doxygen" />
+		<property name="dist_bin" value="dist/ant-doxygen-bin-${version}" />
+		<property name="dist_src" value="dist/ant-doxygen-src-${version}" />
+		<property name="dist_info" value="README LICENSE FILES AUTHORS CHANGES" />
+
+	</target>
+
+
+
+
+
+	<!--===========================================================================-->
+	<!-- CLASSPATH REFERENCES:							-->
+	<!--	 project.class.path	- Used to compile this project.			-->
+	<!--	 									-->
+	<!-- DEPENDENCIES: (safe to comment out if you do not have these libraries).	-->
+	<!--	 lib/junit.jar			- jUnit 3.8.1 in binary distribution.	-->
+	<!--	 lib/checkstyle-all-3.3.jar	- included in binary distribution.	-->
+	<!--	 									-->
+	<path id="project.class.path">
+		<pathelement path="src" />
+		<pathelement path="classes" />
+		<pathelement path="lib/com.springsource.org.apache.tools.ant.jar" />
+		<pathelement path="lib/com.springsource.org.junit.jar" />
+	</path>
+
+
+
+
+
+	<!--===========================================================================-->
+	<!-- HIERARCHY:								-->
+	<!--	 Make sure that our expected directory tree exists.			-->
+	<!--	 									-->
+	<target name="hierarchy">
+		<mkdir dir="classes" />
+		<mkdir dir="doc" />
+		<mkdir dir="doc/api" />
+		<mkdir dir="lib" />
+		<mkdir dir="dist" />
+		<mkdir dir="test" />
+	</target>
+
+	<target name="init">
+		<ant dir="." antfile="ivy-targets.xml" target="inflate-core" inheritAll="false" />
+	</target>
+
+
+
+
+
+	<!--===========================================================================-->
+	<!-- COMPILATION:								-->
+	<!--	 Compile the project sources (excludes the test files).			-->
+	<!--	 									-->
+	<target name="compile" depends="init, properties, hierarchy" description="Compile the project sources.">
+		<javac srcdir="src" destdir="classes" classpathref="project.class.path" source="${project.source}" target="${project.target}" 
+		debug="true" debuglevel="source,lines,vars" />
+	</target>
+
+
+
+
+
+	<!--===========================================================================-->
+	<!-- DOCUMENTATION:								-->
+	<!--	Use Doxygen to against these sources and produce a set for the website. -->
+	<!--   Users can use this as an example of how attributes might be passed.     -->
+	<!--	 									-->
+	<!--	 									-->
+	<target name="documentation" depends="javadoc, doxygen" description="Use JavaDoc and Doxygen to generate the project documentation.">
+
+	</target>
+
+	<target name="javadoc">
+		<javadoc classpathref="project.class.path" additionalparam="-quiet -breakiterator" destdir="doc/api">
+			<packageset dir="src" defaultexcludes="yes">
+				<include name="org/doxygen/tools/**" />
+			</packageset>
+			<bottom>
+				<![CDATA[<i>Ant-Doxygen JavaDocs</i>]]></bottom>
+	</javadoc>
+</target>
+
+<target name="doxygen" depends="properties">
+	<taskdef name="doxygen" classname="org.doxygen.tools.DoxygenTask" classpathref="project.class.path" />
+	<doxygen doxygenPath="doxygen" configFilename="conf/doxygen.cfg" versionCompatible="1.3.3+">
+		<property name="PROJECT_NAME" value="Ant-Doxygen" />
+		<property name="PROJECT_NUMBER" value="${version}" />
+	</doxygen>
+</target>
+
+
+
+
+<!--===========================================================================-->
+<!-- DELIVERABLES:								-->
+<!--	Produce the tested deliverables for this project.			-->
+<!--	 									-->
+<!-- 	ant_doxygen.jar				- Ant task binary.		-->
+<!-- 	ant_doxygen-bin-${version}.zip		- Binary distribution.		-->
+<!-- 	ant_doxygen-src-${version}.zip		- Source distribution.		-->
+<!--	 									-->
+<target name="deliverables" depends="compile,documentation,test" description="Produce the project deliverables.  (default)">
+
+
+	<jar destfile="${dist_ant}.jar">
+		<fileset dir="classes" excludes="**/*Test.class" />
+		<fileset dir="src" includes="**/antlib.xml" />
+	</jar>
+
+
+	<tar tarfile="${dist_bin}.tar" basedir="." includes="${dist_info} ${dist_ant}.jar examples/** ${dist_www}" />
+	<gzip zipfile="${dist_bin}.tgz" src="${dist_bin}.tar" />
+
+
+	<tar tarfile="${dist_src}.tar" basedir="." includes="${dist_info} ${dist_ant}.jar src/** conf/** examples/** ${dist_www}" />
+	<gzip zipfile="${dist_src}.tgz" src="${dist_src}.tar" />
+</target>
+
+
+
+
+
+<!--===========================================================================-->
+<!-- STYLE CHECK:								-->
+<!--	 This project uses the Sun style (just like Ant).  Make sure that 	-->
+<!--	 any changes to the source still conform to this style.		 	-->
+<!--	 Target fails if checkstyle-all-3.3.jar (or later is not available).	-->
+<!--	 									-->
+<target name="checkstyle" description="Verify the sources conform to Sun Style Guide.">
+	<taskdef resource="checkstyletask.properties" classpathref="project.class.path" />
+	<checkstyle config="xml/sun_checks.xml" failureProperty="checkstyle.failure" failOnViolation="false" classpathref="project.class.path">
+		<fileset dir="src" includes="**/*.java" />
+		<property key="checkstyle.maxfilelen" value="4000" />
+		<property key="checkstyle.allow.package" value="true" />
+		<formatter type="xml" tofile="style.xml" />
+	</checkstyle>
+	<style in="style.xml" out="style.txt" style="xml/checkstyle-text.xsl" />
+	<echo message="Sun style-guide conformance report: style.txt" />
+</target>
+
+
+
+
+
+<!--===========================================================================-->
+<!-- TEST:									-->
+<!--	Perform unit testing on this project.					-->
+<!--	 Target fails if junit.jar (3.7 or later not available).		-->
+<!--	 									-->
+<target name="test" depends="compile" description="Perform unit tests.">
+
+	<taskdef name="doxygen" classname="org.doxygen.tools.DoxygenTask" classpathref="project.class.path" />
+	<!--  <junit printsummary="yes" >
+   <formatter type="brief"/>
+   <classpath>
+    <pathelement location="classes"/>
+    <pathelement path="project.class.path"/>
+   </classpath>
+   <test name="org.doxygen.tools.DoxygenTest" outfile="unittests"/>
+  </junit>
+ 	<echo message="Unit Test Results: unittests.txt"/>
+ -->
+</target>
+
+
+
+
+
+<!--===========================================================================-->
+<!-- CLEAN:									-->
+<!--	Removed compiled / generated files. 					-->
+<!--	 									-->
+<target name="clean" depends="properties" description="Remove binary files.">
+	<delete dir="classes" />
+	<delete dir="depcache" />
+	<delete dir="test" />
+	<delete dir="dist" />
+
+	<delete file="${ant_doxygen}.jar" />
+	<delete file="style.txt" />
+	<delete file="style.xml" />
+	<delete file="unittests.txt" />
+</target>
+</project>
