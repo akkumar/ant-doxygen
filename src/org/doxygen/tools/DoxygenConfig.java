@@ -108,11 +108,11 @@ public class DoxygenConfig {
      *
      */
     public DoxygenConfig() {
-    	//DETAILS_AT_TOP is deprecated since 1.5.8 
+      //DETAILS_AT_TOP is deprecated since 1.5.8
         //setProperty("DETAILS_AT_TOP", true);
-    	
-    	//since 1.5.8 of doxygen - EXPAND_TOC is changed to TOC_EXPAND . 
-    	//Until we figure out a better way - this is being commented out.
+
+      //since 1.5.8 of doxygen - EXPAND_TOC is changed to TOC_EXPAND .
+      //Until we figure out a better way - this is being commented out.
         //setProperty("EXPAND_TOC", true);
         //setProperty("FILE_PATTERNS", "*.java");
         setProperty("GENERATE_LATEX", false);
@@ -148,7 +148,7 @@ public class DoxygenConfig {
         taskProperties.put(keyName, nestedElement);
 
         String val = value;
-        //TODO: Some properties like FILE_PATTERNS do not like spaces though. 
+        //TODO: Some properties like FILE_PATTERNS do not like spaces though.
         // There must be some optional way to set the same.
         if (val.indexOf(' ') > -1) { val =  "\"" + val + "\""; }
         nestedElement.setValue(val);
@@ -324,8 +324,8 @@ public class DoxygenConfig {
      *
      */
     public final void cascadeDoxygenConfig(final SortedMap<String, String> map) {
-    	Collection<DoxygenTask.Property> coll = taskProperties.values();
-    	for (DoxygenTask.Property nestedElement : coll) {
+      Collection<DoxygenTask.Property> coll = taskProperties.values();
+      for (DoxygenTask.Property nestedElement : coll) {
                 map.put(nestedElement.getName(), nestedElement.getValue());
         }
     }
