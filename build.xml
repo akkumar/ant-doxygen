@@ -17,7 +17,7 @@
 <!--	 									-->
 <!--============================================================================-->
 
-<project name="Ant-Doxygen" default="deliverables" basedir=".">
+<project name="Ant-Doxygen" default="deliverables" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
 
 
@@ -63,7 +63,7 @@
 	<!--	 									-->
 	<path id="project.class.path">
 		<pathelement path="src" />
-		<pathelement path="classes" />
+		<pathelement path="target/classes" />
 		<pathelement path="lib/com.springsource.org.apache.tools.ant.jar" />
 		<pathelement path="lib/com.springsource.org.junit.jar" />
 	</path>
@@ -86,7 +86,7 @@
 	</target>
 
 	<target name="init">
-		<ant dir="." antfile="ivy-targets.xml" target="inflate-core" inheritAll="false" />
+		<!--<ant dir="." antfile="ivy-targets.xml" target="inflate-core" inheritAll="false" /> -->
 	</target>
 
 
@@ -98,8 +98,13 @@
 	<!--	 Compile the project sources (excludes the test files).			-->
 	<!--	 									-->
 	<target name="compile" depends="init, properties, hierarchy" description="Compile the project sources.">
+		  <artifact:mvn pom="${basedir}/pom.xml">
+		    <arg value="compile"/>
+		  </artifact:mvn>
+<!--		
 		<javac srcdir="src" destdir="classes" classpathref="project.class.path" source="${project.source}" target="${project.target}" 
 		debug="true" debuglevel="source,lines,vars" />
+-->		
 	</target>
 
 
@@ -117,8 +122,8 @@
 	</target>
 
 	<target name="javadoc">
-		<javadoc classpathref="project.class.path" additionalparam="-quiet -breakiterator" destdir="doc/api">
-			<packageset dir="src" defaultexcludes="yes">
+		<javadoc classpathref="project.class.path" additionalparam="-quiet -breakiterator" destdir="target/doc/api">
+			<packageset dir="src/main/java" defaultexcludes="yes">
 				<include name="org/doxygen/tools/**" />
 			</packageset>
 			<bottom>
@@ -149,7 +154,7 @@
 
 
 	<jar destfile="${dist_ant}.jar">
-		<fileset dir="classes" excludes="**/*Test.class" />
+		<fileset dir="target/classes" excludes="**/*Test.class" />
 		<fileset dir="src" includes="**/antlib.xml" />
 	</jar>
 
@@ -221,6 +226,7 @@
 	<delete dir="depcache" />
 	<delete dir="test" />
 	<delete dir="dist" />
+	<delete dir="target" />
 
 	<delete file="${ant_doxygen}.jar" />
 	<delete file="style.txt" />
