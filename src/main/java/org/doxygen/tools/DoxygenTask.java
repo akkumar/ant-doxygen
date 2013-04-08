@@ -163,7 +163,7 @@ public class DoxygenTask extends Task {
 
     conf.writeDoxygenConfig(configFilename); // Then we update it.
     activityLog(true, "Executing doxygen ...");
-    proc.executeDoxygenConfig(configFilename);
+    proc.executeDoxygenConfig(CONFIG_FILE);
     activityLog(true, "done");
     // No need to delete the config. file at all.
     // Let it be there for the user to know what was used.
